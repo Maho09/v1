@@ -1,5 +1,6 @@
 #intro:
 
+- this module uses selinium for the web
 - This script sends whatsapp messeges and emails
 - You can load data from excel or csv file
 
