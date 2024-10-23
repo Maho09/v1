@@ -10,6 +10,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import os
 
 # Set up Chrome WebDriver
 chrome_options = Options()
@@ -26,11 +27,10 @@ driver = webdriver.Chrome(
 def send_whatsapp_message(phone_number, message):
     try:
         driver.get(
-            f"https://web.whatsapp.com/send?phone={int(phone_number)}&text={str(message)}"
+            f"https://web.whatsapp.com/send?phone={phone_number}&text={str(message)}"
         )
-        time.sleep(10)
-        wait = WebDriverWait(driver, 10)
-        send_btn = wait.until(
+
+        send_btn = WebDriverWait(driver, 100).until(
             EC.presence_of_element_located(
                 (
                     By.XPATH,
@@ -40,7 +40,7 @@ def send_whatsapp_message(phone_number, message):
         )
         send_btn.click()
         send_btn.send_keys(Keys.ENTER)
-
+        time.sleep(4)
     except Exception as e:
         print("Error sending message to" + phone_number + f"ERROR:{e}")
 
@@ -49,11 +49,10 @@ def send_email(sender_email, password, receiver_email, msg):
     # setting up the email server
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
-    sender_email = sender_email
-    password = password
+
     try:
         # Set up the server connection
-        server = smtplib.SMTP(smtp_server, smtp_port)
+        server = smtplib.SMTP(smtp_server, smtp_port, timeout=30)
         server.starttls()  # Secure the connection
 
         # Login to email account
@@ -86,9 +85,13 @@ def send_email(sender_email, password, receiver_email, msg):
 
 def load_excel_file(file):
     # Read the Excel file into a DataFrame
+    if not os.path.exists(file):
+        raise FileNotFoundError(f"the file {file} can not be found")
     return pd.read_excel(file)
 
 
 def load_csv_file(file):
     # Read the Excel file into a DataFrame
+    if not os.path.exists(file):
+        raise FileNotFoundError(f"the file {file} can not be found")
     return pd.read_csv(file)
