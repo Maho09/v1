@@ -11,6 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import os
+from dotenv import load_dotenv
 
 # Set up Chrome WebDriver
 chrome_options = Options()
@@ -95,3 +96,6 @@ def load_csv_file(file):
     if not os.path.exists(file):
         raise FileNotFoundError(f"the file {file} can not be found")
     return pd.read_csv(file)
+
+def env(item):
+    return load_dotenv(item)
